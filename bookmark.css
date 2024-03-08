@@ -1,0 +1,109 @@
+body {
+    background-color: #111111;
+    color: #FFFFFF;
+    margin: 0 10px;
+    border-bottom: #FFFFFF;
+}
+
+header,footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    font-size: 50px;
+    margin-top: 20px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.side{
+    display: flex;
+    background-color: #222222;
+    width: 250px;
+    margin-right: 10px;
+    margin-bottom: auto;
+    padding: 10px 0;
+    position: sticky;
+    top: 10px;
+    flex-direction: column;
+}
+
+.side_divide{
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+}
+
+.side_list{
+    padding: 3px 0;
+}
+
+.side_button{
+    font-size: 16px;
+}
+
+.contents {
+    background-color: #20273d;
+    flex-grow: 1;
+    padding: 10px 10px;
+    width: auto;
+}
+
+.contents_ul{
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.content {
+    display: flex;
+    list-style-type: none;
+    padding: 5px;
+    margin: 5px;
+    width: 200px;
+    flex-direction: column;
+    align-items: center;
+    border: solid 1px;
+    border-radius: 15px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.content:hover{
+    background-color: #3b3f4d;
+}
+
+.content_title{
+    font-size: 26px;
+}
+
+.content_domain, .content_url{
+    word-break: break-all;
+    text-align: center;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* 任意の行数を指定 */
+}
+
+.content_link{
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+} 
+
+button {
+    background-color: #111111;
+    color: #FFFFFF;
+}

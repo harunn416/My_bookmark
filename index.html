@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Bookmark</title>
+    <script src="bookmark.js"></script>
+    <link href="bookmark.css" rel="stylesheet" type="text/css" media="all">
+  </head>
+  <body>
+    <header>
+        My Bookmark
+        <div id="temp_data" style="display: none;"></div>
+    </header>
+    <hr>
+    <main>
+        <div class="container">
+            <div class="side">
+                <div class="side_divide"><p style="font-size: 25px;margin: 5px auto;color: #f8acff;">表示設定</p></div>
+                <div style="margin: 0 10px;"><hr></div>
+                <div class="side_divide"><p style="font-size: 20px;margin: 10px auto 10px auto;color: #aad2ff;">すべて</p></div>
+                <div class="side_divide"><p style="font-size: 20px;margin: 10px auto 10px auto;color: #ffef5c;">☆お気に入り☆</p></div>
+                <div style="margin: 0 10px;"><hr></div>
+                <div class="side_divide side_domain">
+                    <p style="font-size: 20px;margin: 10px auto 0 auto;">ドメイン</p>
+                    <ul id="domain_list" style="padding-left: 20px;"></ul>
+                </div>
+                <div style="margin: 0 10px;"><hr></div>
+                <div class="side_divide side_tag">
+                    <p style="font-size: 20px;margin: 10px auto 0 auto;">ファイル</p>
+                    <ul id="file_list" style="padding-left: 20px;"></ul>
+                </div>
+                <div style="margin: 0 10px;"><hr></div>
+                <div class="side_divide"><p style="font-size: 20px;margin: 10px auto 10px auto;color: #a7ff9f;">🖊メモ🖊<br>(おまけ機能(未実装))</p></div>
+            </div>
+            <div class="contents">
+                <ul class="contents_ul">
+                    <li class="content" >
+                        <div class="content_title">title</div>
+                        <div class="content_domain">domain: <span class="domain_name">aaaa.com</span></div>
+                        <div class="content_url">url: <span class="domain_name">https//aaaa.com/sexal/foooooooo</span></div>
+                        <a href="https://weather.yahoo.co.jp/weather/jp/40/8240/40503.html" class="content_link" target="_blank" rel="noreferrer noopener"></a>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </main>
+    <footer>
+        おわりー
+    </footer>
+  </body>
+</html>
+<script>get()</script>
