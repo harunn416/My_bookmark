@@ -1,20 +1,25 @@
 function get(){
-    var api_url = "https://script.google.com/macros/s/AKfycbwe2DmJiuEYebL3xRnrENibQj_Plre93pW2wzuFa_2I6I-UJ5yJbg6I-OVc5Fz4JNqC1A/exec"
-    fetch(api_url, {
-        method: "post",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: encodeURI(`order=get_json&parameter_1=&parameter_2=`)
-    })
-        .then((response) => {
-            response.text().then((text) => {
-                make(text)
-            });
+    var api_url = localStorage.getItem("api_url");
+    console.log(api_url);
+    if(api_url == null){
+        document.getElementsByClassName("contents")[0].innerHTML = "<p style='font-size: 30px;'>apiを設定してください</p><p style='font-size: 30px;'>詳細はページ下部</p>"
+    }else{
+        fetch(api_url, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: encodeURI(`order=get_json&parameter_1=&parameter_2=`)
         })
-        .catch((error) => {
-            alert(error.message);
-        });
+            .then((response) => {
+                response.text().then((text) => {
+                    make(text)
+                });
+            })
+            .catch((error) => {
+                alert(error.message + "  APIのURLを確認してください");
+            });
+    }   
 }
 
 //データを受け取ったあとの最初の処理
@@ -81,6 +86,8 @@ function make_side(data){
 }
 
 function make_contents(data){
+    //一度初期化
+    document.getElementById("iferror_message").innerHTML = ""
     //親要素
     var contents_ul = document.getElementsByClassName("contents_ul")[0]
     for(var content of data.bookmark.contents){
@@ -144,4 +151,18 @@ function send(){
         .catch((error) => {
             alert(error.message);
         });
+}
+
+function changeAPI(){
+    if(document.getElementById("set_api").style.display=="none"){
+        document.getElementById("set_api").style.display = ""
+    }else{
+        document.getElementById("set_api").style.display = "none"
+    }
+    
+}
+
+function setAPI(){
+    var input = document.getElementById("type_api").value
+    localStorage.setItem("api_url",input);
 }
