@@ -32,11 +32,12 @@
                 <div class="side_divide"><p style="font-size: 20px;margin: 10px auto 10px auto;color: #a7ff9f;">🖊メモ🖊<br>(おまけ機能(未実装))</p></div>
             </div>
             <div class="contents">
+                <div id="iferror_message">時間が立っても表示されない場合は、APIのURLを確認してください。</div>
                 <ul class="contents_ul">
-                    <li class="content" >
-                        <div class="content_title">title</div>
+                    <li class="content">
+                        <div class="content_title">title TEST</div>
                         <div class="content_domain">domain: <span class="domain_name">aaaa.com</span></div>
-                        <div class="content_url">url: <span class="domain_name">https//aaaa.com/sexal/foooooooo</span></div>
+                        <div class="content_url">url: <span class="domain_name">https//aaaa.com/testURL</span></div>
                         <a href="https://weather.yahoo.co.jp/weather/jp/40/8240/40503.html" class="content_link" target="_blank" rel="noreferrer noopener"></a>
                     </li>
                 </ul>
@@ -45,7 +46,17 @@
         </div>
     </main>
     <footer>
-        おわりー
+        <div style="display: flex;">
+            <p style="margin: 0 10px 0 0;">api設定 → </p>
+            <button id="api_button" onclick="changeAPI()">aip 設定・変更</button>
+        </div>
+        <div id="set_api" style="margin: 20px 0;padding: 10px;border: solid 1px;border-radius: 15px;display: none;">
+            <p style="margin: 0;">新しく登録するAPIのURLを書き込んでください。</p>
+            <div style="display: flex;">
+                <input type="text" id="type_api" style="font-size: 20px;width: 100%;">
+                <button id="api_button" onclick="setAPI()"><nobr>aip 更新</nobr></button>
+            </div>
+        </div>
     </footer>
   </body>
 </html>
