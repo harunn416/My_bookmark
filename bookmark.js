@@ -29,10 +29,12 @@ function make(data){
     console.log("取得データ↓")
     console.log(data)
 
+    //データを仮領域に格納
+    document.getElementById("temp_data").innerHTML = JSON.stringify(data);
+
     make_side(data);
 
-    make_contents(data)
-    
+    make_contents(data) 
 }
 
 function make_side(data){
@@ -48,7 +50,7 @@ function make_side(data){
                 //class属性追加
                 create_button.classList.add("side_button")
                 //onclick 追加
-                create_button.setAttribute(onclick, "make_domain('"+ domain_name +"')")
+                create_button.setAttribute("onclick", "make_domain('"+ domain_name +"')")
 
             //list
                 //要素作成
@@ -72,7 +74,7 @@ function make_side(data){
                 //class属性追加
                 create_button.classList.add("side_button")
                 //onclick 追加
-                create_button.setAttribute(onclick, "make_file('"+ file_name +"')")
+                create_button.setAttribute("onclick", "make_file('"+ file_name +"')")
 
             //list
                 //要素作成
@@ -87,73 +89,109 @@ function make_side(data){
 }
 
 function make_contents(data){
+    if(data == undefined){data = JSON.parse(document.getElementById("temp_data").innerHTML)};
     //一度初期化
     document.getElementById("iferror_message").innerHTML = ""
-    //親要素
-    var contents_ul = document.getElementsByClassName("contents_ul")[0]
+    delete_content_all()
     var i = 0
-    for(var content of data.bookmark.contents){
-        //list
-        var content_list = document.createElement("li");
-        content_list.classList.add("content");
-
-        //title
-        var content_title = document.createElement("div");
-        content_title.classList.add("content_title");
-        content_title.textContent = content.title
-
-        //domain
-        var content_domain = document.createElement("div");
-        content_domain.classList.add("content_domain");
-        content_domain.innerHTML = "domain: <span class='domain_name'>"+content.domain+"</span>"
-
-        //url
-        var content_url = document.createElement("div");
-        content_url.classList.add("content_url");
-        content_url.innerHTML = "url: <span class='url_name'>"+content.url+"</span>"
-
-        //operator
-        var operator = document.createElement("div");
-        operator.classList.add("operator");
-            //button delete
-            var delete_button = document.createElement("button");
-            delete_button.classList.add("content_delete_button");
-            delete_button.setAttribute("onclick",'delete_content('+i+","+content.key+')')
-            delete_button.innerHTML = "削除"
-            //button like
-            var like_button = document.createElement("button");
-            like_button.classList.add("content_like_button");
-            if(content.like == "like"){like_button.classList.add("content_like");}
-            like_button.setAttribute("onclick",'change_like('+i+","+content.key+')')
-            like_button.innerHTML = "♥"
-        operator.appendChild(delete_button);
-        operator.appendChild(like_button);
-
-        //anker (a)
-        var content_link = document.createElement("a");
-        content_link.classList.add("content_link");
-        content_link.setAttribute("href", content.url);
-        content_link.setAttribute("target", "_blank");
-        content_link.setAttribute("rel", "noreferrer noopener");
-
-        //list に他要素を追加
-        content_list.appendChild(content_title);
-        content_list.appendChild(content_domain);
-        content_list.appendChild(content_url);
-        content_list.appendChild(content_link);
-        content_list.appendChild(operator);
-
-        //ul に list を追加
-        contents_ul.appendChild(content_list)
-
-        //i を進める
+    for(content of data.bookmark.contents){
+        make_content(content,i)
         i++
     }
 }
 
+function delete_content_all(){
+    var length = document.getElementsByClassName("content").length
+    for(var i=0; i<length; i++){
+        document.getElementsByClassName("content")[0].remove()
+    }
+}
+
+function make_content(content,i){ //i is list number. "start from 0"
+    //親要素
+    var contents_ul = document.getElementsByClassName("contents_ul")[0]
+
+    //list
+    var content_list = document.createElement("li");
+    content_list.classList.add("content");
+
+    //title
+    var content_title = document.createElement("div");
+    content_title.classList.add("content_title");
+    content_title.textContent = content.title
+
+    //domain
+    var content_domain = document.createElement("div");
+    content_domain.classList.add("content_domain");
+    content_domain.innerHTML = "domain: <span class='domain_name'>"+content.domain+"</span>"
+
+    //url
+    var content_url = document.createElement("div");
+    content_url.classList.add("content_url");
+    content_url.innerHTML = "url: <span class='url_name'>"+content.url+"</span>"
+
+    //operator
+    var operator = document.createElement("div");
+    operator.classList.add("operator");
+        //button delete
+        var delete_button = document.createElement("button");
+        delete_button.classList.add("content_delete_button");
+        delete_button.setAttribute("onclick",'delete_content('+i+","+content.key+')')
+        delete_button.innerHTML = "削除"
+        //button like
+        var like_button = document.createElement("button");
+        like_button.classList.add("content_like_button");
+        if(content.like == "like"){like_button.classList.add("content_like");}
+        like_button.setAttribute("onclick",'change_like('+i+","+content.key+')')
+        like_button.innerHTML = "♥"
+    operator.appendChild(delete_button);
+    operator.appendChild(like_button);
+
+    //anker (a)
+    var content_link = document.createElement("a");
+    content_link.classList.add("content_link");
+    content_link.setAttribute("href", content.url);
+    content_link.setAttribute("target", "_blank");
+    content_link.setAttribute("rel", "noreferrer noopener");
+
+    //list に他要素を追加
+    content_list.appendChild(content_title);
+    content_list.appendChild(content_domain);
+    content_list.appendChild(content_url);
+    content_list.appendChild(content_link);
+    content_list.appendChild(operator);
+
+    //ul に list を追加
+    contents_ul.appendChild(content_list)
+}
+
 //指定したドメインに分類します
 function make_domain(domain){
-    console.log("make_domain :"+domain)
+    delete_content_all()
+    //get the data
+    var data = JSON.parse(document.getElementById("temp_data").innerHTML);
+    
+    var i = 0
+    for(content of data.bookmark.contents){
+        if(content.domain == domain){
+            make_content(content)
+            i++
+        }
+    }
+}
+
+function make_like(){
+    delete_content_all()
+    //get the data
+    var data = JSON.parse(document.getElementById("temp_data").innerHTML);
+    
+    var i = 0
+    for(content of data.bookmark.contents){
+        if(content.like == "like"){
+            make_content(content)
+            i++
+        }
+    }
 }
 
 
@@ -172,7 +210,7 @@ function send(order,pa1,pa2){
     })
         .then((response) => {
             response.text().then((text) => {
-                return text
+                console.log(text)
             });
         })
         .catch((error) => {
@@ -207,5 +245,9 @@ function change_like(num,key){
 }
 
 function delete_content(num,key){
-    alert(num+","+key);
+    //要素の削除
+    if(window.confirm("要素を削除します。\nよろしいですか？")){
+        console.log(send("delete_content",key));
+        document.getElementsByClassName("content")[num].remove()
+    }
 }
