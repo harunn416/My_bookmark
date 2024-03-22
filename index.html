@@ -11,10 +11,24 @@
         <div id="temp_data" style="display: none;"></div>
     </header>
     <hr>
+    <div id="add_form" style="display: flex;justify-content: center;align-items: center;">
+        <div>bookmark追加</div>
+        <input type="input" placeholder="URLを入力" style="width: 80%;margin: 0 10px;height: 20px;" id="form_add_url">
+        <button onclick="form_add_bookmark()">追加</button>
+        <button onclick="apparent_form_extra()" style="margin-left: 10px;font-size: 17px;font-weight: bold;">↓</button>
+    </div>
+    <div id="form_extra"style="display: flex;justify-content: center;align-items: center;">
+        <div>追加項目</div>
+        <div>タイトル</div>
+        <input type="input" placeholder="タイトルを入力 ※任意" style="width: 80%;margin: 0 10px;height: 20px;" id="form_add_url">
+    </div>
+    <hr>
     <main>
         <div class="container">
             <div class="side">
                 <div class="side_divide"><p style="font-size: 25px;margin: 5px auto;color: #f8acff;">表示設定</p></div>
+                <div style="margin: 0 10px;"><hr></div>
+                <div class="side_divide"><div class="side_check"><label for="hidden_checkbox">非表示を表示</label><input type="checkbox" id="hidden_checkbox"></div></div>
                 <div style="margin: 0 10px;"><hr></div>
                 <div class="side_divide"><a style="font-size: 20px;margin: 10px auto 10px auto;color: #aad2ff;" onclick="make_contents()">すべて</a></div>
                 <div class="side_divide"><a style="font-size: 20px;margin: 10px auto 10px auto;color: #ffef5c;" onclick="make_like()">☆お気に入り☆</a></div>
@@ -33,35 +47,23 @@
             </div>
             <div class="contents">
                 <div id="iferror_message">時間が立っても表示されない場合は、APIのURLを確認してください。</div>
-                <ul class="contents_ul">
-                <!-- <li class="content">
-                        <div class="content_title">title TEST</div>
-                        <div class="content_domain">domain: <span class="domain_name">aaaa.com</span></div>
-                        <div class="content_url">url: <span class="domain_name">https//aaaa.com/testURL</span></div>
-                        <div class="operator">
-                            <button class="content_delete_button">削除</button>
-                            <button class="content_like_button">♥</button>
-                        </div>
-                        <a href="https://weather.yahoo.co.jp/weather/jp/40/8240/40503.html" class="content_link" target="_blank" rel="noreferrer noopener"></a>
-                    </li> -->
-                </ul>
-                
+                <ul class="contents_ul"></ul>
             </div>
         </div>
     </main>
     <footer>
         <div style="display: flex;">
             <p style="margin: 0 10px 0 0;">api設定 → </p>
-            <button id="api_button" onclick="changeAPI()">aip 設定・変更</button>
+            <button id="api_button" onclick="changeAPI()">api 設定・変更</button>
         </div>
         <div id="set_api" style="margin: 20px 0;padding: 10px;border: solid 1px;border-radius: 15px;display: none;width: 80%;">
             <p style="margin: 0;">新しく登録するAPIのURLを書き込んでください。</p>
             <div style="display: flex;">
                 <input type="text" id="type_api" style="font-size: 20px;width: 100%;">
-                <button id="api_button" onclick="setAPI()"><nobr>aip 更新</nobr></button>
+                <button id="api_button" onclick="setAPI()"><nobr>api 更新</nobr></button>
             </div>
         </div>
     </footer>
   </body>
 </html>
-<script>get()</script>
+<script>//get()</script>
