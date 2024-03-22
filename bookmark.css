@@ -10,7 +10,7 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 70px;
+    height: 60px;
     font-size: 50px;
     margin-top: 20px;
 }
@@ -55,8 +55,16 @@ footer {
     font-size: 16px;
 }
 
+.side_check{
+    margin: auto;
+}
+
+.side_check input{
+    size: 20px;
+}
+
 .contents {
-    background-color: #20273d;
+    background-color: #0f1527;
     flex-grow: 1;
     padding: 10px 10px;
     width: auto;
@@ -74,7 +82,7 @@ footer {
 .content {
     display: flex;
     list-style-type: none;
-    padding: 5px;
+    padding: 7px;
     margin: 5px;
     width: 250px;
     flex-direction: column;
@@ -100,8 +108,11 @@ footer {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3; /* 任意の行数を指定 */
 }
+
+.content_domain{-webkit-line-clamp: 1; /* 任意の行数を指定 */}
+
+.content_url{-webkit-line-clamp: 3; /* 任意の行数を指定 */}
 
 .content_link{
     z-index: 2;
@@ -113,21 +124,46 @@ footer {
     display: block;
 } 
 
+.change_name_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 3;
+    border: white 2px dashed;
+    border-radius: 10px;
+    width: 95%;
+    padding: 5px 0;
+    margin-top: 10px;
+    font-size: 19px;
+}
+
+.change_name_form input{
+    width: 90%;
+}
+
+.change_name_form div{
+    display: flex;
+    width: 85%;
+    justify-content: space-around;
+}
+
 button {
     background-color: #111111;
     color: #FFFFFF;
+    border: solid #FFF 2px;
+    border-radius: 6px;
 }
 
 .operator{
+    z-index: 3;
     display: flex;
     width: 100%;
     justify-content: flex-end;
     margin: auto 0 4px 0;
 }
 
-.content_delete_button, .content_like_button{
+.operator button{
     display: block;
-    z-index: 3;
     margin: 0 5px 0 0;
     transition: all 0.2s;
 }
@@ -155,6 +191,21 @@ button {
 
 .content_like_button:hover{
     background-color: #242424;
+}
+
+.content_hidden_button{
+    border-radius: 10px;
+    color: #aaa;
+    border: solid #aaa 2px;
+}
+
+.content_hidden{
+    color: #FFF;
+    border: solid #FFF 2px;
+}
+
+.content_change_name_button{
+    border-radius: 10px;
 }
 
 #api_button{
