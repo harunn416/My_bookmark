@@ -1,9 +1,17 @@
+
 <!DOCTYPE html>
 <html>
   <head>
     <title>My Bookmark</title>
     <script src="bookmark.js"></script>
     <link href="bookmark.css" rel="stylesheet" type="text/css" media="all">
+
+    <!-- jQuery用 -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
   </head>
   <body>
     <header>
@@ -11,16 +19,29 @@
         <div id="temp_data" style="display: none;"></div>
     </header>
     <hr>
-    <div id="add_form" style="justify-content: center;align-items: center;display:none;">
+    <div id="add_form" style="display: flex;justify-content: center;align-items: center;width: 95%;margin: 0 auto">
         <div>bookmark追加</div>
         <input type="input" placeholder="URLを入力" style="width: 80%;margin: 0 10px;height: 20px;" id="form_add_url">
         <button onclick="form_add_bookmark()">追加</button>
         <button onclick="apparent_form_extra()" style="margin-left: 10px;font-size: 17px;font-weight: bold;">↓</button>
     </div>
-    <div id="form_extra"style="justify-content: center;align-items: center;display:none;">
-        <div>追加項目</div>
-        <div>タイトル</div>
-        <input type="input" placeholder="タイトルを入力 ※任意" style="width: 80%;margin: 0 10px;height: 20px;" id="form_add_url">
+    <div id="form_extra" style="display: none;flex-direction: column;align-items: center;margin: 10px 0 0 0;">
+        <div>Option</div>
+        <div class="option">
+            <div>Title</div>
+            <input type="input" placeholder="タイトルを入力" style="width: 100%;margin: 0 10px;height: 20px;" id="form_add_title">
+        </div>
+        <div class="option">
+            <div class="option_div"><label>like<input type="checkbox" class="option_checkbox" id="option_like"></label></div>
+            <div class="option_div"><label>hidden<input type="checkbox" class="option_checkbox" id="option_hidden"></label></div>
+            <div class="option_div">
+                <label for="pulldown_list">tag
+                <!-- Multiple Select -->
+                <select multiple="multiple" id="pulldown_list"></select>
+                </label>
+            </div>
+            <div class="option_div">create new file<input type="input" placeholder="新規ファイルとして追加 ※任意" style="margin: 0 10px;height: 20px;" id="form_add_file"></div>
+        </div>
     </div>
     <hr>
     <main>
@@ -39,7 +60,7 @@
                 </div>
                 <div style="margin: 0 10px;"><hr></div>
                 <div class="side_divide side_tag">
-                    <p style="font-size: 20px;margin: 10px auto 0 auto;">ファイル</p>
+                    <p style="font-size: 20px;margin: 10px auto 0 auto;">タグ</p>
                     <ul id="file_list" style="padding-left: 20px;"></ul>
                 </div>
                 <div style="margin: 0 10px;"><hr></div>
