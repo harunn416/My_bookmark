@@ -1,10 +1,12 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <title>My Bookmark</title>
     <script src="bookmark.js"></script>
     <link href="bookmark.css" rel="stylesheet" type="text/css" media="all">
+    <link href="bookmark_responsive.css" rel="stylesheet" type="text/css" media="all">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+
 
     <!-- jQuery用 -->
         <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
@@ -16,31 +18,37 @@
   <body>
     <header>
         My Bookmark
-        <div id="temp_data" style="display: none;"></div>
+        <div id="temp_data" style="display: none;">
+        </div>
     </header>
     <hr>
     <div id="add_form" style="display: flex;justify-content: center;align-items: center;width: 95%;margin: 0 auto">
         <div>bookmark追加</div>
         <input type="input" placeholder="URLを入力" style="width: 80%;margin: 0 10px;height: 20px;" id="form_add_url">
-        <button onclick="form_add_bookmark()">追加</button>
+        <button onclick="form_add_bookmark()"><nobr>追加</nobr></button>
         <button onclick="apparent_form_extra()" style="margin-left: 10px;font-size: 17px;font-weight: bold;">↓</button>
     </div>
+    <hr id="option_separate_border" color="#444" style="display: none;">
     <div id="form_extra" style="display: none;flex-direction: column;align-items: center;margin: 10px 0 0 0;">
-        <div>Option</div>
-        <div class="option">
-            <div>Title</div>
-            <input type="input" placeholder="タイトルを入力" style="width: 100%;margin: 0 10px;height: 20px;" id="form_add_title">
+        <div>Options</div>
+        <div class="option" style="width: 100%;">
+            <div class="option_div" style="width: 100%; padding: 0 10%;">
+                <div>Title</div>
+                <input type="input" placeholder="タイトルを入力" style="width: 100%;margin: 0 10px;height: 20px;" id="form_add_title">
+            </div>
         </div>
         <div class="option">
-            <div class="option_div"><label>like<input type="checkbox" class="option_checkbox" id="option_like"></label></div>
-            <div class="option_div"><label>hidden<input type="checkbox" class="option_checkbox" id="option_hidden"></label></div>
+            <div class="option_div">
+                <div style="margin-right: 80px;"><label>like<input type="checkbox" class="option_checkbox" id="option_like"></label></div>
+                <label>hidden<input type="checkbox" class="option_checkbox" id="option_hidden"></label>
+            </div>
             <div class="option_div">
                 <label for="pulldown_list">tag
                 <!-- Multiple Select -->
                 <select multiple="multiple" id="pulldown_list"></select>
                 </label>
             </div>
-            <div class="option_div">create new file<input type="input" placeholder="新規ファイルとして追加 ※任意" style="margin: 0 10px;height: 20px;" id="form_add_file"></div>
+            <div class="option_div">create new tag<input type="input" placeholder="新規ファイルとして追加 ※任意" style="margin: 0 10px;height: 20px;" id="form_add_tag"></div>
         </div>
     </div>
     <hr>
@@ -61,22 +69,92 @@
                 <div style="margin: 0 10px;"><hr></div>
                 <div class="side_divide side_tag">
                     <p style="font-size: 20px;margin: 10px auto 0 auto;">タグ</p>
-                    <ul id="file_list" style="padding-left: 20px;"></ul>
+                    <ul id="tag_list" style="padding-left: 20px;"></ul>
                 </div>
                 <div style="margin: 0 10px;"><hr></div>
                 <div class="side_divide"><p style="font-size: 20px;margin: 10px auto 10px auto;color: #a7ff9f;">🖊メモ🖊<br>(おまけ機能(未実装))</p></div>
             </div>
             <div class="contents">
                 <div id="iferror_message">時間が立っても表示されない場合は、APIのURLを確認してください。</div>
-                <ul class="contents_ul"></ul>
+                <div id="memo" style="display: none;">
+                    <table id="memo_table" >
+                        <colgroup>
+                            <col span="2">
+                            <col width="20%">
+                            <col width="80%">
+                            <col width="auto">
+                            </colgroup>
+                        <tbody>
+                            <tr>
+                                <th>No.</th>
+                                <th>time</th>
+                                <th>title</th>
+                                <th>strings</th>
+                                <th>edit</th>
+                            </tr>
+                            <tr>
+                                <th>1</th>
+                                <td>24/05/12<br>12:30</td>
+                                <td>bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</td>
+                                <td>c</td>
+                                <td><button onclick="memo_editor_display(1)">🖊️</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="bookmark">
+                    <div id="each_bookmark_editor"  style="display: none;">
+                        <div id="each_bookmark_editor_back_grund"></div>
+                        <div id="each_bookmark_editor_operation_panel">
+                            <span class="round_btn" onclick="each_bookmark_editer_disappeard()"></span>
+                            <div style="font-size: 50px; font-weight: bold; margin: 10px 0 0 0;">bookmark Editor</div>
+                            <hr>
+                            <div class="edit_options">
+                                <div class="edit_option">
+                                    <div>・url</div>
+                                    <textarea id="edit_bm_url" name="edit_bm_url" rows="1" class="not_title">error</textarea>
+                                    <div style="font-size: 15px;" class="not_title">変更前: <span id="edit_before_bm_url">error</span></div>
+                                </div>
+                                <div class="edit_option">
+                                    <div>・title</div>
+                                    <textarea id="edit_bm_title" name="edit_bm_title" rows="1" class="not_title">error</textarea>
+                                    <div style="font-size: 15px;" class="not_title">変更前: <span id="edit_before_bm_title">error</span></div>
+                                </div>
+                                <div class="edit_option">
+                                    <div style="display: flex;">
+                                        <div style="width: 50%;"><label>・like <input type="checkbox" id="edit_bm_like"></label></div>
+                                        <div style="width: 50%;"><label>・hidden <input type="checkbox" id="edit_bm_hidden"></label></div>
+                                    </div>
+                                </div>
+                                <div class="edit_option" style="display: flex;">
+                                    <div style="width: 50%;">
+                                        <div>・tags</div>
+                                        <div style="font-size: 15px;" class="not_title">
+                                            <select multiple="multiple" id="pulldown_list">
+                                                <option value="a">b</option>
+                                                <option value="b">b</option>
+                                                <option value="c">c</option>
+                                                <option value="d">d</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div style="width: 50%;">
+                                        <div>・append new tag</div>
+                                        <input type="text" name="bm_new_tag" id="bm_new_tag" style="font-size: 20px;" class="not_title">
+                                        <div style="font-size: 15px; opacity: 0.8;"><nobr>「半角スペース」で</nobr><nobr>区切ると</nobr><nobr>複数いれることが<nobr>できます。</nobr></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <button style="background-color: #032d51; font-size: 20px; padding: 2px 10px; border-radius: 15px;">送信</button>
+                        </div>
+                    </div>
+                    <ul class="contents_ul"></ul>
+                </div>
             </div>
         </div>
     </main>
     <footer>
-        <div style="display: flex;">
-            <p style="margin: 0 10px 0 0;">api設定 → </p>
-            <button id="api_button" onclick="changeAPI()">api 設定・変更</button>
-        </div>
         <div id="set_api" style="margin: 20px 0;padding: 10px;border: solid 1px;border-radius: 15px;display: none;width: 80%;">
             <p style="margin: 0;">新しく登録するAPIのURLを書き込んでください。</p>
             <div style="display: flex;">
@@ -84,7 +162,13 @@
                 <button id="api_button" onclick="setAPI()"><nobr>api 更新</nobr></button>
             </div>
         </div>
+        <div style="display: flex;">
+            <p style="margin: 0 10px 0 0;">api設定 → </p>
+            <button id="api_button" onclick="changeAPI()">api 設定・変更</button>
+        </div>
     </footer>
   </body>
 </html>
-<script>get()</script>
+<script>
+    get()
+</script>
