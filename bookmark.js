@@ -1,4 +1,4 @@
-//let deta JSON.parse(document.getElementById("temp_data").innerHTML)
+//let data = JSON.parse(document.getElementById("temp_data").innerHTML)
 
 function get(){
     let api_url = localStorage.getItem("api_url");
@@ -85,32 +85,32 @@ function make_side(data){
             create_domain.appendChild(create_button);
             domain_list.appendChild(create_domain);
         }
-    //file
+    //tag
         //親要素
-        let file_list = document.getElementById("file_list");
-        for(let file_name of data.bookmark.file_unique){
+        let tag_list = document.getElementById("tag_list");
+        for(let tag_name of data.bookmark.tag_unique){
             //button
                 //要素作成
                 let create_button = document.createElement("button");
                 //要素に名前を入れる
-                create_button.textContent = file_name
+                create_button.textContent = tag_name
                 //class属性追加
                 create_button.classList.add("side_button")
                 //onclick 追加
-                create_button.setAttribute("onclick", "make_file('"+ file_name +"')")
+                create_button.setAttribute("onclick", "make_tag('"+ tag_name +"')")
 
             //list
                 //要素作成
-                let create_file = document.createElement("li");
+                let create_tag = document.createElement("li");
                 //class属性追加
-                create_file.classList.add("side_list")
+                create_tag.classList.add("side_list")
 
             //親要素に追加
-            create_file.appendChild(create_button);
-            file_list.appendChild(create_file);
+            create_tag.appendChild(create_button);
+            tag_list.appendChild(create_tag);
 
             //fome extra にも追加
-            $("#pulldown_list").append(`<option value="${file_name}">${file_name}</option>`)
+            $("#pulldown_list").append(`<option value="${tag_name}">${tag_name}</option>`)
         }
 }
 
@@ -152,19 +152,31 @@ function make_content(content){
         content_url.classList.add("content_url");
         content_url.innerHTML = "url: <span class='url_name'>"+content.url+"</span>"
 
+        //tag
+        let content_taglist = document.createElement("div");
+        content_taglist.classList.add("content_tagli");
+        if(content.tag){}
+
         //operator
         let operator = document.createElement("div");
         operator.classList.add("operator");
-            //button change name
-            let change_name_button = document.createElement("button");
-            change_name_button.classList.add("content_change_name_button");
-            change_name_button.setAttribute("onclick",'make_change_name_input('+i+","+content.key+')')
-            change_name_button.innerHTML = "タイトル変更"
+            //2024-5-19 bookmark editor に変更
+            ////button change name
+            //let change_name_button = document.createElement("button");
+            //change_name_button.classList.add("content_change_name_button");
+            //change_name_button.setAttribute("onclick",'make_change_name_input('+i+","+content.key+')')
+            //change_name_button.innerHTML = "タイトル変更"
+
+            //bookmark_editor
+            let edit_button = document.createElement("button");
+            edit_button.classList.add("content_appear_bm_edit_button");
+            edit_button.setAttribute("onclick",'appear_bm_edit('+i+","+content.key+')')
+            edit_button.innerHTML = "<span style='font-size: 14px;'>🖊️</span>edit"
             //button delete
             let delete_button = document.createElement("button");
             delete_button.classList.add("content_delete_button");
             delete_button.setAttribute("onclick",'delete_content('+i+","+content.key+')')
-            delete_button.innerHTML = "削除"
+            delete_button.innerHTML = "delete"
             //button like
             let like_button = document.createElement("button");
             like_button.classList.add("content_like_button");
@@ -177,10 +189,10 @@ function make_content(content){
             if(content.hidden == "hidden"){hidden_button.classList.add("content_hidden");}
             hidden_button.setAttribute("onclick",'change_hidden('+i+","+content.key+')')
             hidden_button.innerHTML = "hidden"
-        operator.appendChild(change_name_button);
         operator.appendChild(hidden_button);
-        operator.appendChild(delete_button);
         operator.appendChild(like_button);
+        operator.appendChild(delete_button);
+        operator.appendChild(edit_button);
 
         //anker (a)
         let content_link = document.createElement("a");
@@ -193,8 +205,8 @@ function make_content(content){
         content_list.appendChild(content_title);
         content_list.appendChild(content_domain);
         content_list.appendChild(content_url);
-        content_list.appendChild(content_link);
         content_list.appendChild(operator);
+        content_list.appendChild(content_link);
 
         //ul に list を追加
         contents_ul.appendChild(content_list)
@@ -233,13 +245,13 @@ function make_like(){
     }
 }
 
-function make_file(file_name){
+function make_tag(tag_name){
     delete_content_all()
     //get the data
     let data = JSON.parse(document.getElementById("temp_data").innerHTML);
     
     for(content of data.bookmark.contents){
-        if(content.file.includes(file_name)){
+        if(content.tag.includes(tag_name)){
             make_content(content)
         }
     }
@@ -257,6 +269,7 @@ function changeAPI(){
 function setAPI(){
     let input = document.getElementById("type_api").value
     localStorage.setItem("api_url",input);
+    window.location.reload()
 }
 
 function change_like(num,key){
@@ -304,12 +317,12 @@ function delete_content(num,key){
         document.getElementsByClassName("content")[num].remove();
 
         //tempdata から削除
-        let deta = JSON.parse(document.getElementById("temp_data").innerHTML)
-        get_content_byKey(deta.bookmark.contents,key).remove();
+        let data = JSON.parse(document.getElementById("temp_data").innerHTML)
+        get_content_byKey(data.bookmark.contents,key).remove();
     }
 }
 
-function make_change_name_input(num,key){
+function make_change_name_input(num,key){ //名前変更を出す。
     if(document.getElementsByClassName("content")[num].getElementsByClassName("change_name_form").length == 0){
         //親要素
         let content = document.getElementsByClassName("content")[num];
@@ -354,33 +367,24 @@ function change_name(num,key){
     }
 }
 
-function get_content_byKey(contents,key){ //data is contents array
-    for(content of contents){
-        if(content.key == key){
-            return content
-        }
-    }
-    return null
-}
-
 function form_add_bookmark(){
     let url = document.getElementById("form_add_url").value;
     let title = document.getElementById("form_add_title").value;
     let like = document.getElementById("option_like").checked;
     let hidden = document.getElementById("option_hidden").checked;
-    let file_list = $("#pulldown_list").val();
-    let new_file = document.getElementById("form_add_file").value;
+    let tag_list = $("#pulldown_list").val();
+    let new_tag = document.getElementById("form_add_tag").value;
 
-    //もし new_file があったら file_list に値を追加
-    if(new_file != ""){file_list.push(new_file)}
+    //もし new_tag があったら tag_list に値を追加
+    if(new_tag != ""){tag_list.push(new_tag)}
 
-    console.log("url:", url, " title:", title, " like:", like, " hidden:", hidden, " file_list:", file_list, " new_file:", new_file);
+    console.log("url:", url, " title:", title, " like:", like, " hidden:", hidden, " tag_list:", tag_list, " new_tag:", new_tag);
 
     let json = {
         title: title,
         like: like,
         hidden: hidden,
-        file_list: file_list,
+        tag_list: tag_list,
     }
 
     send("add_content", url, JSON.stringify(json));
@@ -389,31 +393,33 @@ function form_add_bookmark(){
 function apparent_form_extra(){
     if(document.getElementById("form_extra").style.display=="none"){
         document.getElementById("form_extra").style.display = "flex"
+        document.getElementById("option_separate_border").style.display = ""
         console.log(document.getElementById("pulldown_list").childElementCount);
         if(document.getElementById("pulldown_list").childElementCount != 0){
             make_select()
         }
     }else{
         document.getElementById("form_extra").style.display = "none";
+        document.getElementById("option_separate_border").style.display = "none"
     }
 }
 
-function create_file_pulldown_list(parent_element, class_name){
+function create_tag_pulldown_list(parent_element, class_name){
     let data = JSON.parse(document.getElementById("temp_data").innerHTML);
-    let file_unique = data.bookmark.file_unique
-    for(file_name of file_unique){
+    let tag_unique = data.bookmark.tag_unique
+    for(tag_name of tag_unique){
         let option = document.createElement("option")
-        option.setAttribute("value",file_name)
-        option.innerHTML = file_name
+        option.setAttribute("value",tag_name)
+        option.innerHTML = tag_name
 
         if(class_name){option.classList.add(class_name)}
 
         parent_element.appendChild(option);
-        $("#pulldown_list").append(`<option value="${file_name}">${file_name}</option>`)
+        $("#pulldown_list").append(`<option value="${tag_name}">${tag_name}</option>`)
     }
 }
 
-function make_select() {
+function make_select() { //プルダウンリストの作成
     $('select').multipleSelect({
         width: 100,
         formatSelectAll: function make_select() {
@@ -423,4 +429,56 @@ function make_select() {
             return '全て選択されています';
         }
     });
+}
+
+function each_bookmark_editer_disappeard(){
+    document.getElementById("each_bookmark_editor").style.display = "none";
+}
+
+function appear_bm_edit(i,key){
+    //編集画面表示
+    document.getElementById("each_bookmark_editor").style.display = "";
+    //編集したいデータをtempから取ってくる。
+    let data = JSON.parse(document.getElementById("temp_data").innerHTML);
+    let content = get_content_byKey(data.bookmark.contents, key)
+    
+    //編集画面に書く値を挿入
+    document.getElementById("edit_bm_url").innerHTML = content.url
+    document.getElementById("edit_before_bm_url").innerHTML = content.url
+    document.getElementById("edit_bm_title").innerHTML = content.title
+    document.getElementById("edit_before_bm_title").innerHTML = content.title
+    if(content.like == "like"){
+        document.getElementById("edit_bm_like").checked = true
+    }else{
+        document.getElementById("edit_bm_like").checked = false
+    }
+    if(content.hidden == "hidden"){
+        document.getElementById("edit_bm_hidden").checked = true
+    }else{
+        document.getElementById("edit_bm_hidden").checked = false
+    }
+    
+    
+    //make_select()
+}
+
+//補助ツール
+function get_content_byKey(contents,key){ //data is contents array
+    for(content of contents){
+        if(content.key == key){
+            return content
+        }
+    }
+    return null
+}
+
+function edit_bookmark_tempData_and_displayBookmark(json_edit ,display_key){ //表示されているデータも書き換える場合は、第二引数にディスプレイ番号を入力してください。
+    json_edit = {}
+    let data_bookmark = JSON.parse(document.getElementById("temp_data").innerHTML).bookmark
+    //新しいタグ
+    if(newTag in json_edit){
+        data_bookmark.tag_unique.push(json_edit.newTag);
+    }
+    //
+    console.log(display_key);
 }
