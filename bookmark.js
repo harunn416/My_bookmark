@@ -312,7 +312,7 @@ function setAPI(){
     let input_pass_re = document.getElementById("input_pass_re").value;
     if(input_pass !== input_pass_re){
         alert("再確認パスワードが一致しません");
-    }else if(input_username != ""){
+    }else if(input_username == ""){
         alert("ユーザーネームを入力してください");
     }else{
         let user_data_json = {
