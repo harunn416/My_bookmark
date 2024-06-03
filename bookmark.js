@@ -1,27 +1,39 @@
 //let data = JSON.parse(document.getElementById("temp_data").innerHTML)
 
 function get(){
-    let api_url = localStorage.getItem("api_url");
-    console.log(`apiURL : ${api_url}`);
-    if(api_url == null){
-        document.getElementsByClassName("contents")[0].innerHTML = "<p style='font-size: 30px;'>apiを設定してください</p><p style='font-size: 30px;'>詳細はページ下部</p>"
+    let user_input_data = JSON.parse(localStorage.getItem("user_input_data"));
+    console.log(`user_input_data : ${user_input_data}`);
+    if(user_input_data == null){
+        document.getElementsByClassName("contents")[0].innerHTML = "<p style='font-size: 30px;'>ユーザー情報を設定してください</p><p style='font-size: 30px;'>詳細はページ下部</p>"
     }else{
-        fetch(api_url, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: encodeURI(`order=get_json&parameter_1=&parameter_2=`)
+        let data = {"method":"get_data","name":user_input_data.user_name, "pass":user_input_data.user_pass}; // 渡したいデータ（配列やオブジェクトでも可） method
+
+        let options = {
+            // 第1引数に送り先
+            method: 'POST', // メソッド指定
+            headers: { 'Content-Type': 'application/json' }, // jsonを指定
+            body: JSON.stringify(data) // json形式に変換して添付
+        }
+
+        fetch('http://webkuma.starfree.jp/getdata.php', options)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json(); // レスポンスが JSON 形式であることを期待
         })
-            .then((response) => {
-                response.text().then((text) => {
-                    make(text)
-                });
-            })
-            .catch((error) => {
-                alert(error.message + "  APIのURLを確認してください");
-            });
-    }   
+        .then(data => {
+            console.log("return : ");
+            console.log(data);
+            if(data.response == "success"){
+                make_mastar_data(data);
+            }else if(data.response == "error"){
+                document.getElementsByClassName("contents")[0].innerHTML = "<p style='font-size: 30px;'>"+data.message+"</p>"
+            }
+            
+        })
+        .catch(error => console.error('Error:', error));
+    }
 }
 
 function send(order,pa1,pa2){
@@ -29,8 +41,8 @@ function send(order,pa1,pa2){
     if(pa1==undefined){pa1 = ""};
     if(pa2==undefined){pa2 = ""};
 
-    let api_url = "https://script.google.com/macros/s/AKfycbwe2DmJiuEYebL3xRnrENibQj_Plre93pW2wzuFa_2I6I-UJ5yJbg6I-OVc5Fz4JNqC1A/exec"
-    fetch(api_url, {
+    let user_input_data = "https://script.google.com/macros/s/AKfycbwe2DmJiuEYebL3xRnrENibQj_Plre93pW2wzuFa_2I6I-UJ5yJbg6I-OVc5Fz4JNqC1A/exec"
+    fetch(user_input_data, {
         method: "post",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -47,26 +59,55 @@ function send(order,pa1,pa2){
         });
 }
 
+function make_mastar_data(data){
+    let json_data = JSON.parse(data.message.data);
+    console.log(json_data);
+
+    //domain_unique
+    let domain_array = []
+    for(content of json_data.bookmark.contents){
+        domain_array.push(content.domain);
+    }
+    let domain_unique = [...new Set(domain_array)];
+    console.log(domain_unique);
+
+    //tag_unique
+    let tag_array = []
+    for(content of json_data.bookmark.contents){
+        if(content.tag != null){
+            for(tag of content.tag){
+                tag_array.push(tag);
+            }
+        }
+    }
+    let tag_unique = [...new Set(tag_array)];
+    console.log(tag_unique);
+
+    make_side(domain_unique, tag_unique);
+
+    json_data.bookmark.domain_unique = domain_unique;
+    json_data.bookmark.tag_unique = tag_unique;
+    console.log(json_data);
+
+    make(json_data);
+}
+
 //データを受け取ったあとの最初の処理
 function make(data){
-    document.getElementById.innerHTML = data;
-    data = JSON.parse(data);
     console.log("取得データ↓")
     console.log(data)
 
     //データを仮領域に格納
     document.getElementById("temp_data").innerHTML = JSON.stringify(data);
 
-    make_side(data);
 
-    make_contents(data) 
+    make_contents(data)
 }
 
-function make_side(data){
+function make_side(domain_unique,tag_unique){
     //doain
         //親要素
-        let domain_list = document.getElementById("domain_list");
-        for(let domain_name of data.bookmark.domain_unique){
+        for(let domain_name of domain_unique){
             //button
                 //要素作成
                 let create_button = document.createElement("button");
@@ -87,8 +128,7 @@ function make_side(data){
         }
     //tag
         //親要素
-        let tag_list = document.getElementById("tag_list");
-        for(let tag_name of data.bookmark.tag_unique){
+        for(let tag_name of tag_unique){
             //button
                 //要素作成
                 let create_button = document.createElement("button");
@@ -267,9 +307,22 @@ function changeAPI(){
 }
 
 function setAPI(){
-    let input = document.getElementById("type_api").value
-    localStorage.setItem("api_url",input);
-    window.location.reload()
+    let input_username = document.getElementById("input_username").value;
+    let input_pass = document.getElementById("input_pass").value;
+    let input_pass_re = document.getElementById("input_pass_re").value;
+    if(input_pass !== input_pass_re){
+        alert("再確認パスワードが一致しません");
+    }else if(input_username != ""){
+        alert("ユーザーネームを入力してください");
+    }else{
+        let user_data_json = {
+            "user_name": input_username,
+            "user_pass": input_pass
+        }
+        localStorage.setItem("user_input_data",JSON.stringify(user_data_json));
+        window.location.reload();
+    }
+    
 }
 
 function change_like(num,key){
