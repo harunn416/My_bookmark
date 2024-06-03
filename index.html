@@ -156,15 +156,27 @@
     </main>
     <footer>
         <div id="set_api" style="margin: 20px 0;padding: 10px;border: solid 1px;border-radius: 15px;display: none;width: 80%;">
-            <p style="margin: 0;">新しく登録するAPIのURLを書き込んでください。</p>
-            <div style="display: flex;">
-                <input type="text" id="type_api" style="font-size: 20px;width: 100%;">
-                <button id="api_button" onclick="setAPI()"><nobr>api 更新</nobr></button>
+            <p style="margin: 0;">「ユーザーネーム」と「パスワード」を書き込んでください。</p>
+            <div style="display: flex;flex-direction: column;">
+                <div style="display: flex;">
+                    <input type="text" id="input_username" style="font-size: 20px;margin-top: 10px;">
+                    ユーザーネーム
+                </div>
+                <div style="display: flex;">
+                    <input type="password" id="input_pass" style="font-size: 20px;margin-top: 10px;">
+                    パスワード
+                </div>
+                <div style="display: flex;">
+                    <input type="password" id="input_pass_re" style="font-size: 20px;margin-top: 10px;">
+                    パスワード(再確認)    
+                </div>
+                <button id="api_button" onclick="setAPI()"><nobr>更新</nobr></button>
+                
             </div>
         </div>
         <div style="display: flex;">
-            <p style="margin: 0 10px 0 0;">api設定 → </p>
-            <button id="api_button" onclick="changeAPI()">api 設定・変更</button>
+            <p style="margin: 0 10px 0 0;">設定 → </p>
+            <button id="api_button" onclick="changeAPI()">設定・変更</button>
         </div>
     </footer>
   </body>
