@@ -15,7 +15,7 @@ function get(){
             body: JSON.stringify(data) // json形式に変換して添付
         }
 
-        fetch('http://webkuma.starfree.jp/getdata.php', options)
+        fetch('getdata.php', options)
         .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
